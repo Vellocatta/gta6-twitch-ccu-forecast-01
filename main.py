@@ -41,6 +41,9 @@ Python 3.13, standard library only. Run as:
     mkdir -p out && MAKEFUN_INPUT_DIR=input MAKEFUN_OUTPUT_DIR=out python3 main.py
 """
 
+# Ensemble in one line: the ratio view and the peak view are averaged in log
+# space, so the forecast inherits the ratio view's honest day-shape and the
+# peak view's steadier evening, with the median kept near the empirical centre.
 import json
 import math
 import os
@@ -162,6 +165,8 @@ def peak_view(near, p1: float):
 
 def ensemble(rows_a, rows_b):
     """Log-average of two per-hour quantile rows (geometric mean)."""
+    # Averaging in log space keeps every quantile positive and lets the
+    # steadier peak view pull the ratio view's wide evening tails inward.
     out = {}
     for h in range(2, 25):
         out[h] = [(a + b) / 2.0 for a, b in zip(rows_a[h], rows_b[h])]
